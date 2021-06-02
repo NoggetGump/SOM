@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import mqttSubPub.MqttPub;
 import mqttSubPub.MqttSubscribe;
+
 import somDB.DBFactory;
 import somDB.IBaseDB;
 
@@ -13,6 +14,7 @@ public class SOM {
 	
 	/**
 	 * Função principal de inicialização do SmartObjects Manager
+	 * Facade
 	 * 
 	 * @param args
 	 * 
