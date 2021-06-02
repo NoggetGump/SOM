@@ -9,13 +9,15 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import SOMain.SOM;
+
 public class MqttSubscribe implements MqttCallback {
 
-    public static void start() {
+    public static void connect() {
     	/* ADICIONAR TÓPICOS AQUI */
         String topic = "som";
         int qos = 2;
-        String broker = "tcp://localhost:1883";
+        String broker = "tcp://localhost:1884";
         String clientId = "SOMserver";
         MemoryPersistence persistence = new MemoryPersistence();
 
@@ -46,7 +48,7 @@ public class MqttSubscribe implements MqttCallback {
 
     public void connectionLost(Throwable arg0) {
         System.err.println("connection lost");
-
+        MqttSubscribe.connect();
     }
 
     public void deliveryComplete(IMqttDeliveryToken arg0) {
@@ -54,8 +56,18 @@ public class MqttSubscribe implements MqttCallback {
     }
 
     public void messageArrived(String topic, MqttMessage message) throws Exception {
+        String msgStr = new String(message.getPayload());
+        String[] msgWords = msgStr.split(" ");
+        
         System.out.println("topic: " + topic);
-        System.out.println("message: " + new String(message.getPayload()));
+        System.out.println("message: " + msgStr);
+        
+        if(msgWords[0].contentEquals("request"))
+        {
+        	SOM som = SOM.getSOM();
+        	som.driverRequest(msgWords[1], msgWords[2]);
+        }
+        
     }
     
 }

@@ -13,7 +13,7 @@ public class MqttPub {
         String topic = "som";
         String content = messageString;
         int qos = 2;
-        String broker = "tcp://localhost:1883";
+        String broker = "tcp://localhost:1884";
         String clientId = "SOMserver";
         MemoryPersistence persistence = new MemoryPersistence();
 
