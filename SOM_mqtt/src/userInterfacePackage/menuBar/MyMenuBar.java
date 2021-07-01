@@ -1,4 +1,4 @@
-package menuBar;
+package userInterfacePackage.menuBar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

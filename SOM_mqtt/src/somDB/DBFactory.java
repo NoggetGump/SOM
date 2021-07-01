@@ -7,6 +7,7 @@ package somDB;
  */
 public final class DBFactory {
 	private static final IBaseDB driverDB = new SOMSQLiteDB();
+	
 	public static IBaseDB GetDriverDB()
 	{
 		return driverDB;

@@ -3,7 +3,7 @@ package actuatorsHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import controlGUI.ControlPanel;
+import userInterfacePackage.ControlPanel;
 
 public class Actuator {
 	String informalName;
@@ -44,7 +44,7 @@ public class Actuator {
 		
 		query.put("MACTQuery", jsonObject);
 		
-        ControlPanel.getContextnetClient().sendCommand(query.toJSONString(),
+        ControlPanel.getSOM().sendCommand(query.toJSONString(),
 				(String) ControlPanel.getControlPanel().getSelectedMhub());
 	}
 	
@@ -75,13 +75,13 @@ public class Actuator {
 		
 		query.put("MACTQuery", jsonObject);
 		
-        ControlPanel.getContextnetClient().sendCommand(query.toJSONString(),
+        ControlPanel.getSOM().sendCommand(query.toJSONString(),
 				(String) ControlPanel.getControlPanel().getSelectedMhub());
 	}
 	
 	public void sendCustoMactQuery(String query) {
 		System.out.println(query);
-		ControlPanel.getContextnetClient().sendCommand(query, 
+		ControlPanel.getSOM().sendCommand(query, 
 				(String) ControlPanel.getControlPanel().getSelectedMhub());
 	}
 

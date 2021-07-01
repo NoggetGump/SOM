@@ -13,8 +13,8 @@ import somDB.IBaseDB;
 public class SOM {
 	
 	/**
-	 * Função principal de inicialização do SmartObjects Manager
-	 * Facade
+	 * Arquivo principal de inicialização do Smart Objects Manager
+	 * Facade cujas funções são chamadas pela UI
 	 * 
 	 * @param args
 	 * 
@@ -23,6 +23,8 @@ public class SOM {
 	private static SOM som;
 	
 	private IBaseDB driverDB;
+
+	public String myUUID;
 	
 	public static synchronized SOM getSOM() {
 		
@@ -43,16 +45,19 @@ public class SOM {
 		 */
 		MqttSubscribe.connect();
 		
+/*		
 		try {
 			TimeUnit.SECONDS.sleep(1);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+			
+			MqttPub.publish("whatever string for testing purposes ");
+		}*/
 	}
 	
 	public void driverRequest(String name, String version)  {
-		String message = new String("requested \n");
+		String message = new String("requested name version\n");
 		String driver = driverDB.GetDeviceDriver(name, version);
 		
 		message = message + driver;
@@ -64,5 +69,24 @@ public class SOM {
 		
 		driverDB.InsertOrUpdateDriver(driver, name, version);
 		
+	}
+
+	public void refreshDevicesList() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void sendCommand(String jsonString, String selectedMhub) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void sendDevice2SOM(String text, String text2, String text3, String text4) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void sendDriver2SOM(String name, String version, String driver) {
+		driverDB.InsertOrUpdateDriver(name, version, driver);
 	}
 }

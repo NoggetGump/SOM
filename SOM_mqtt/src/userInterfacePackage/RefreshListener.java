@@ -12,7 +12,7 @@ public class RefreshListener {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				
-				ControlPanel.getContextnetClient().refreshDevicesList();
+				ControlPanel.getSOM().refreshDevicesList();
 				
 			}
 			

@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.PlainDocument;
 
+import SOMain.SOM;
 import actuatorsHandler.Actuator;
 import userInterfacePackage.menuBar.MyMenuBar;
 
@@ -66,17 +67,15 @@ public class ControlPanel{
 	}
 	
 	/**
-	 * Singleton; generates, if does not exist, and get instance of
-	 * ContextNET ControllerClient Object stored in Control Panel;
+	 * Singleton; Facade of SOM side;
 	 *  
 	 * @return
 	 */
 	
-	public static ControllerClient getContextnetClient() {
-		if(cc == null)
-			cc = new ControllerClient();
-			
-		return cc;
+	public static SOM getSOM() {
+		
+		return SOM.getSOM();
+		
 	}
 	
 	public Window getMainFrame() { 
@@ -286,4 +285,5 @@ public class ControlPanel{
 		window.revalidate();
 		window.repaint();
 	}
+
 }

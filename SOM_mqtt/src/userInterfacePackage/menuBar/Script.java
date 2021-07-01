@@ -150,7 +150,7 @@ public class Script {
 				+ "\t\t\"type\" : \"cmd\",\n"
 				+ "\t\t\"label\" : \"someLabel\",\n"
 				+ "\t\t\"device\" : \"" + deviceName + "\"" + ",\n"
-				+ "\t\t\"id\" : " + ControlPanel.getContextnetClient().myUUID + ",\n"
+				+ "\t\t\"id\" : " + ControlPanel.getSOM().myUUID + ",\n"
 				+ "\t\t\"cmds\" : [\n"; //open brackets to cmds 1
 		while(!cmds.isEmpty()) {
 			CmdPair cmd = cmds.remove(FIRST);

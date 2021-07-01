@@ -36,8 +36,8 @@ public class SOMSQLiteDB implements IBaseDB {
             // criando tabelas
             statement.execute("CREATE TABLE IF NOT EXISTS TB_DRIVER ( "
             		+ "ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-            		+ "NAME TEXT,"
-            		+ "VERSION TEXT,"
+            		+ "NAME TEXT NOT NULL,"
+            		+ "VERSION TEXT NOT NULL,"
             		+ "DRIVER BLOB"
             		+ ")");
         } catch (SQLException e) {
@@ -47,15 +47,15 @@ public class SOMSQLiteDB implements IBaseDB {
 	
 
 	@Override
-	public String InsertOrUpdateDriver(String driver, String name, String version) {
+	public String InsertOrUpdateDriver(String name, String version, String driver) {
 		
-		String sql = "INSERT OR REPLACE INTO TB_DRIVER(DRIVER, NAME, VERSION) VALUES(?,?,?)";
+		String sql = "INSERT OR REPLACE INTO TB_DRIVER(NAME, VERSION, DRIVER) VALUES(?,?,?)";
 		
 		try (Connection connection = this.connection();
 				PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setString(1, driver);
-			pstmt.setString(2, name.toLowerCase());
-			pstmt.setString(3, version.toLowerCase());
+			pstmt.setString(1, name.toLowerCase());
+			pstmt.setString(2, version.toLowerCase());
+			pstmt.setString(3, driver);
 			pstmt.executeUpdate();
 			
 		}
@@ -82,7 +82,7 @@ public class SOMSQLiteDB implements IBaseDB {
 			ResultSet resultSet = pstmt.executeQuery();
 			
 			if(resultSet.first())
-				return resultSet.getString("DRIVER"); 
+				return resultSet.getString("DRIVER");
 			
 			return null;
 		}
