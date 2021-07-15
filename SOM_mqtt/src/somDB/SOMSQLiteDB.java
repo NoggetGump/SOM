@@ -11,8 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.json.simple.JSONObject;
 
@@ -35,7 +33,6 @@ public class SOMSQLiteDB implements IBaseDB {
 
             // criando tabelas
             statement.execute("CREATE TABLE IF NOT EXISTS TB_DRIVER ( "
-            		+ "ID INTEGER PRIMARY KEY AUTOINCREMENT, "
             		+ "NAME TEXT NOT NULL,"
             		+ "VERSION TEXT NOT NULL,"
             		+ "DRIVER BLOB"
@@ -68,21 +65,17 @@ public class SOMSQLiteDB implements IBaseDB {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String GetDeviceDriver(String name, String version) {
+	public String GetDeviceDriver(String name) {
 		String sql = "SELECT DRIVER FROM TB_DRIVER "
-				+ "WHERE TB_DRIVER.NAME = ?"
-				+ "AND TB_DRIVER.VERSION = ?";
-		
+				+ "WHERE NAME = ?";
+		System.out.println(name + " from DB");
 		try (Connection connection = this.connection();
-				
-		PreparedStatement pstmt = connection.prepareStatement(sql)) {
+				PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, name.toLowerCase());
-			pstmt.setString(2, version.toLowerCase());
-
 			ResultSet resultSet = pstmt.executeQuery();
-			
-			if(resultSet.first())
+			if(resultSet.next()) {
 				return resultSet.getString("DRIVER");
+			}
 			
 			return null;
 		}

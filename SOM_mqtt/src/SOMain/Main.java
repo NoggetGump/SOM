@@ -14,6 +14,5 @@ public class Main {
 		 */
 		SOM som = SOM.getSOM();
 		ControlPanel CP = ControlPanel.getControlPanel();
-		MqttPub.publish("driver", "some shit for testing");
 	}
 }

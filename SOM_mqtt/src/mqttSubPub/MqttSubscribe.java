@@ -9,13 +9,15 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONObject;
+
 import SOMain.SOM;
 
 public class MqttSubscribe implements MqttCallback {
 
-	public static void connect(/* TODO PASSAR O TÓPICO POR AQUI */) {
+	public static void connect(String topic) {
 		/* ADICIONAR TÓPICO AQUI */
-		String topic = "driver";
 		int qos = 2;
 		String broker = "tcp://localhost:1884";
 		String clientId = "SOMlistener";
@@ -48,7 +50,7 @@ public class MqttSubscribe implements MqttCallback {
 
 	public void connectionLost(Throwable arg0) {
 		System.out.println("connection lost - trying to reconnect");
-		MqttSubscribe.connect();
+		MqttSubscribe.connect(SOM.TOPIC);
 	}
 
 	public void deliveryComplete(IMqttDeliveryToken arg0) {
@@ -57,16 +59,18 @@ public class MqttSubscribe implements MqttCallback {
 
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 		String msgStr = new String(message.getPayload());
-		String[] msgWords = msgStr.split(" ");
-
-		System.out.println("topic: " + topic);
-		System.out.println("message: " + msgStr);
-
-		if (msgWords[0].contentEquals("request")) {
-			SOM som = SOM.getSOM();
-			som.driverRequest(msgWords[1], msgWords[2]);
+		
+		JSONParser parser = new JSONParser();
+		
+		JSONObject jsonObject = (JSONObject) parser.parse(msgStr);
+		
+		if(jsonObject.get("action").toString().equalsIgnoreCase("getdriver"))
+		{
+			JSONObject body = (JSONObject) jsonObject.get("body");
+			String deviceName = body.get("name").toString();
+			String responseTopic = jsonObject.get("response_topic").toString();
+			
+			SOM.getSOM().driverRequest(responseTopic, deviceName);
 		}
-
 	}
-
 }

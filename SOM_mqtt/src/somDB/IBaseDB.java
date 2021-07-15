@@ -38,5 +38,5 @@ public interface IBaseDB {
 	 * @param macAddress
 	 * @return objeto json { driver: "driver" }
 	 */
-	String GetDeviceDriver(String name, String version);
+	String GetDeviceDriver(String name);
 }
