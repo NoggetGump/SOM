@@ -57,6 +57,7 @@ public class MqttSubscribe implements MqttCallback {
 		System.out.println("delivery complete");
 	}
 
+	@SuppressWarnings("unchecked")
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 		String msgStr = new String(message.getPayload());
 		
@@ -64,13 +65,26 @@ public class MqttSubscribe implements MqttCallback {
 		
 		JSONObject jsonObject = (JSONObject) parser.parse(msgStr);
 		
+		String responseTopic = jsonObject.get("response_topic").toString();
+		
 		if(jsonObject.get("action").toString().equalsIgnoreCase("getdriver"))
 		{
 			JSONObject body = (JSONObject) jsonObject.get("body");
 			String deviceName = body.get("name").toString();
-			String responseTopic = jsonObject.get("response_topic").toString();
 			
 			SOM.getSOM().driverRequest(responseTopic, deviceName);
+		}
+		//respond message if
+		else {
+			String content = (String) jsonObject.get("content");
+			
+			JSONObject msgResponse = new JSONObject();
+			JSONObject responseBody = new JSONObject();
+			
+			msgResponse.put("action", "respond");
+			responseBody.put("wpan", "1");
+			responseBody.put("content", "some content to fill ");
+			msgResponse.put("body", responseBody.toJSONString());
 		}
 	}
 }
