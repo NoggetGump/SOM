@@ -15,6 +15,8 @@ import org.json.simple.JSONObject;
 import SOMain.SOM;
 
 public class MqttSubscribe implements MqttCallback {
+	
+	private static final String clientID = "paho1627395013315000000";
 
 	public static void connect(String topic) {
 		/* ADICIONAR TÓPICO AQUI */
@@ -59,7 +61,7 @@ public class MqttSubscribe implements MqttCallback {
 
 	@SuppressWarnings("unchecked")
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
-		String msgStr = new String(message.getPayload());
+		/*String msgStr = new String(message.getPayload());
 		
 		JSONParser parser = new JSONParser();
 		
@@ -85,6 +87,31 @@ public class MqttSubscribe implements MqttCallback {
 			responseBody.put("wpan", "1");
 			responseBody.put("content", "some content to fill ");
 			msgResponse.put("body", responseBody.toJSONString());
-		}
+		}*/
+		
+		//Checando se a humidade média é maior ou menor que 70%
+		
+		String msgStr =  new String(message.getPayload(), "UTF-8");
+		
+		char[] chars = msgStr.toCharArray();
+		
+		String valueStr = "";
+		
+		for(int i = 27; chars[i]!='}'; i++)
+			valueStr = valueStr + chars[i];
+		
+		System.out.println("valueStr");
+		
+		float value = Float.parseFloat(valueStr);
+		
+		String response;
+
+		if(value > 70.0) 
+			response = "{\"response\":\"positive\"}";
+		else
+			response = "{\"response\":\"negative\"}";
+		
+		MqttPub.publish(clientID + "/default", response);
+		
 	}
 }

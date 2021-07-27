@@ -54,14 +54,6 @@ public class SOM {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		MqttPub.publish(TOPIC, "{\n" + 
-				"   \"action\": \"getDriver\",\n" + 
-				"   \"response_topic\": \"clientid/driver/response\"\n" + 
-				"   \"body\": {\n" + 
-				"   	\"wpan\": 1,\n" + 
-				"	\"name\": \"CC2650SensorTag\"\n" + 
-				"   }\n" + 
-				"}");
 	}
 	
 	@SuppressWarnings("unchecked")
