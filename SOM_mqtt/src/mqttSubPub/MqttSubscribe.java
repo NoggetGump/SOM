@@ -16,7 +16,7 @@ import SOMain.SOM;
 
 public class MqttSubscribe implements MqttCallback {
 	
-	private static final String clientID = "paho1627395013315000000";
+	private static final String clientID = "paho1627408105878000000";
 
 	public static void connect(String topic) {
 		/* ADICIONAR TÓPICO AQUI */
@@ -61,57 +61,52 @@ public class MqttSubscribe implements MqttCallback {
 
 	@SuppressWarnings("unchecked")
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
-		/*String msgStr = new String(message.getPayload());
+		
+		String msgStr = new String(message.getPayload());
 		
 		JSONParser parser = new JSONParser();
 		
 		JSONObject jsonObject = (JSONObject) parser.parse(msgStr);
 		
-		String responseTopic = jsonObject.get("response_topic").toString();
-		
-		if(jsonObject.get("action").toString().equalsIgnoreCase("getdriver"))
-		{
-			JSONObject body = (JSONObject) jsonObject.get("body");
-			String deviceName = body.get("name").toString();
+		try {
 			
-			SOM.getSOM().driverRequest(responseTopic, deviceName);
+			String responseTopic = jsonObject.get("response_topic").toString();
+			
+			if(jsonObject.get("action").toString().equalsIgnoreCase("getdriver"))
+			{
+				JSONObject body = (JSONObject) jsonObject.get("body");
+				String deviceName = body.get("name").toString();
+				
+				SOM.getSOM().driverRequest(responseTopic, deviceName);
+			}
+			//respond message if
+			else {
+				String content = (String) jsonObject.get("content");
+				
+				JSONObject msgResponse = new JSONObject();
+				JSONObject responseBody = new JSONObject();
+				
+				msgResponse.put("action", "respond");
+				responseBody.put("wpan", "1");
+				responseBody.put("content", "some content to fill ");
+				msgResponse.put("body", responseBody.toJSONString());
+			}
+			
+			MqttPub.publish(clientID + "/default", response);
+			
 		}
-		//respond message if
-		else {
-			String content = (String) jsonObject.get("content");
+		
+		catch (Exception me) {
 			
-			JSONObject msgResponse = new JSONObject();
-			JSONObject responseBody = new JSONObject();
+			System.out.println("\nMQTT message received was not a driver request or does not need a response");
 			
-			msgResponse.put("action", "respond");
-			responseBody.put("wpan", "1");
-			responseBody.put("content", "some content to fill ");
-			msgResponse.put("body", responseBody.toJSONString());
-		}*/
-		
-		//Checando se a humidade média é maior ou menor que 70%
-		
-		String msgStr =  new String(message.getPayload(), "UTF-8");
-		
-		char[] chars = msgStr.toCharArray();
-		
-		String valueStr = "";
-		
-		for(int i = 27; chars[i]!='}'; i++)
-			valueStr = valueStr + chars[i];
-		
-		System.out.println("valueStr");
-		
-		float value = Float.parseFloat(valueStr);
-		
-		String response;
+			String messageContent = jsonObject.get("payload").toString();
+			
+			System.out.println("\nMessage payload: " + messageContent);
+			
+			return;
+		}
 
-		if(value > 70.0) 
-			response = "{\"response\":\"positive\"}";
-		else
-			response = "{\"response\":\"negative\"}";
-		
-		MqttPub.publish(clientID + "/default", response);
 		
 	}
 }
