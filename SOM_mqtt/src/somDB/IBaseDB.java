@@ -31,12 +31,12 @@ public interface IBaseDB {
 	 * @param deviceVendor - fabricante do dispositivo (p.ex. Sphero)
 	 * @return string indicando sucesso ou o erro
 	 */
-	String InsertOrUpdateDriver(String driver, String name, String version);
+	String InsertOrUpdateDriver(String name, String version, String driver);
 
 	/**
 	 * Obtem um driver compativel ao dispositivo
 	 * @param macAddress
 	 * @return objeto json { driver: "driver" }
 	 */
-	String GetDeviceDriver(String name, String version);
+	String GetDeviceDriver(String name);
 }

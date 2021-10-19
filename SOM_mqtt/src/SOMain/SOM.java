@@ -1,18 +1,20 @@
 package SOMain;
 
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.json.simple.JSONObject;
 
 import mqttSubPub.MqttPub;
 import mqttSubPub.MqttSubscribe;
+
 import somDB.DBFactory;
 import somDB.IBaseDB;
 
 public class SOM {
 	
 	/**
-	 * Função principal de inicialização do SmartObjects Manager
+	 * Arquivo principal de inicialização do Smart Objects Manager
+	 * Facade cujas funções são chamadas pela UI
 	 * 
 	 * @param args
 	 * 
@@ -21,6 +23,10 @@ public class SOM {
 	private static SOM som;
 	
 	private IBaseDB driverDB;
+
+	public String myUUID;
+	
+	public static String TOPIC = "default";
 	
 	public static synchronized SOM getSOM() {
 		
@@ -39,8 +45,9 @@ public class SOM {
 		 * MQTT
 		 * Se inscrevendo nos tópicos de interesse via MQTT.
 		 */
-		MqttSubscribe.connect();
+		MqttSubscribe.connect(TOPIC);
 		
+	
 		try {
 			TimeUnit.SECONDS.sleep(1);
 		} catch (InterruptedException e) {
@@ -49,18 +56,39 @@ public class SOM {
 		}
 	}
 	
-	public void driverRequest(String name, String version)  {
-		String message = new String("requested \n");
-		String driver = driverDB.GetDeviceDriver(name, version);
+	@SuppressWarnings("unchecked")
+	public void driverRequest(String topic, String name)  {
+		JSONObject drResponse = new JSONObject();
+		JSONObject responseBody = new JSONObject();
 		
-		message = message + driver;
+		drResponse.put("action", "save");
+		responseBody.put("wpan", "1");
+		responseBody.put("name", name);
+		responseBody.put("content", driverDB.GetDeviceDriver(name.toLowerCase()));
+		drResponse.put("body", responseBody.toJSONString());
 		
-		MqttPub.publish(message);
+		MqttPub.publish(topic, drResponse.toString());
 	}
 
 	public void newDriverArrived(String driver, String name, String version)  {
 		
 		driverDB.InsertOrUpdateDriver(driver, name, version);
 		
+	}
+
+	public void refreshDevicesList() {
+		
+	}
+
+	public void sendCommand(String jsonString, String selectedMhub) {
+		
+	}
+
+	public void sendDevice2SOM(String text, String text2, String text3, String text4) {
+		
+	}
+
+	public void sendDriver2SOM(String name, String version, String driver) {
+		driverDB.InsertOrUpdateDriver(name, version, driver);
 	}
 }
